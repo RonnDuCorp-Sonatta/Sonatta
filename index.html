@@ -72,7 +72,15 @@
     window.SonattaApp.currentUser = user;
     if (user) {
       showScreen('homeScreen');
-      if (window.SonattaUI) window.SonattaUI.onUserLogin(user);
+      // Esperar a que el DOM y SonattaUI estén listos
+      const tryLogin = () => {
+        if (window.SonattaUI && window.SonattaUI.onUserLogin) {
+          window.SonattaUI.onUserLogin(user);
+        } else {
+          setTimeout(tryLogin, 100);
+        }
+      };
+      tryLogin();
     } else {
       showScreen('welcomeScreen');
     }
